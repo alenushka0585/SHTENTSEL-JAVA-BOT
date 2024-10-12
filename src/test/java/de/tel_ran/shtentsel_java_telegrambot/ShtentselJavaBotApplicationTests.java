@@ -1,4 +1,4 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT;
+package de.tel_ran.shtentsel_java_telegrambot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

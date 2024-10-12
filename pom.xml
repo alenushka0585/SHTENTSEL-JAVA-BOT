@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>de.tel-ran</groupId>
-	<artifactId>SHTENTSEL-JAVA-BOT</artifactId>
+	<artifactId>shtentsel-java-bot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SHTENTSEL-JAVA-BOT</name>
 	<description>Demo project for Spring Boot</description>
@@ -122,6 +122,18 @@
 			<groupId>com.jakewharton.retrofit</groupId>
 			<artifactId>retrofit2-reactor-adapter</artifactId>
 			<version>2.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.6.0.Beta1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>1.6.0.Beta1</version>
+			<scope>provided</scope>
 		</dependency>
 
 

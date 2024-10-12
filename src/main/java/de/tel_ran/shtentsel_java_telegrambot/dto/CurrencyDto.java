@@ -1,4 +1,4 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT.dto;
+package de.tel_ran.shtentsel_java_telegrambot.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

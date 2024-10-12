@@ -1,4 +1,4 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT.service;
+package de.tel_ran.shtentsel_java_telegrambot.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,10 @@ import lombok.Getter;
 public enum Command {
     HELP("/help"),
     START("/start"),
+    STOP("/stop"),
+    RATE("/rate"),
+    SUBSCRIBE("/subscribe"),
+    SUBSCRIPTIONS("/subscriptions"),
     UNKNOWN("");
     private final String command;
 

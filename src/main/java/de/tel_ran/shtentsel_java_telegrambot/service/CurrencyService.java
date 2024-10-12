@@ -1,14 +1,9 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT.service;
+package de.tel_ran.shtentsel_java_telegrambot.service;
 
-import de.tel_ran.SHTENTSEL_JAVA_BOT.dto.CurrencyDto;
-import de.tel_ran.SHTENTSEL_JAVA_BOT.entity.Currency;
-import de.tel_ran.SHTENTSEL_JAVA_BOT.repository.CurrencyRepository;
+import de.tel_ran.shtentsel_java_telegrambot.dto.CurrencyDto;
+import de.tel_ran.shtentsel_java_telegrambot.entity.Currency;
+import de.tel_ran.shtentsel_java_telegrambot.repository.CurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -17,10 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 
 
 @Service
@@ -54,7 +46,10 @@ public class CurrencyService {
 
         }
 
-        return "" + currencyDto;
+        return  currencyDto.getDate() + "\n" +
+                baseCurrency.toUpperCase() + " : " + requiredCurrency.toUpperCase() + "\n" +
+                "Курс: " +  String.format("%.3f", currencyDto.getRate()) + "\n" +
+                "Обратный курс: " + String.format("%.3f", currencyDto.getInverseRate());
     }
 
     // TODO Метод создавался для заполнения базы данных списком доступных валют, удалить???

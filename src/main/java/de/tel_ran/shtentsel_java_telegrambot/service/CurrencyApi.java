@@ -1,6 +1,6 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT.service;
+package de.tel_ran.shtentsel_java_telegrambot.service;
 
-import de.tel_ran.SHTENTSEL_JAVA_BOT.dto.CurrencyDto;
+import de.tel_ran.shtentsel_java_telegrambot.dto.CurrencyDto;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

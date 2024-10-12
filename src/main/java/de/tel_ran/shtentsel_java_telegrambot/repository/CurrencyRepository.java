@@ -1,6 +1,6 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT.repository;
+package de.tel_ran.shtentsel_java_telegrambot.repository;
 
-import de.tel_ran.SHTENTSEL_JAVA_BOT.entity.Currency;
+import de.tel_ran.shtentsel_java_telegrambot.entity.Currency;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT;
+package de.tel_ran.shtentsel_java_telegrambot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

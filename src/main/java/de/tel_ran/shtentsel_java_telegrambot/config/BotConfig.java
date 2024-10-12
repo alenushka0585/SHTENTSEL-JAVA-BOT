@@ -1,6 +1,6 @@
-package de.tel_ran.SHTENTSEL_JAVA_BOT.config;
+package de.tel_ran.shtentsel_java_telegrambot.config;
 
-import de.tel_ran.SHTENTSEL_JAVA_BOT.command.ExchangeRatesBot;
+import de.tel_ran.shtentsel_java_telegrambot.command.ExchangeRatesBot;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
