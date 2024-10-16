@@ -9,8 +9,13 @@ public enum Command {
     HELP("/help"),
     START("/start"),
     STOP("/stop"),
-    RATE("/rate"),
+    RATE_MESSAGE("/rateMessage"),
+    SET_BASE_CURRENCY("/setBaseCurrency"),
+    SET_REQUIRED_CURRENCY("/setRequiredCurrency"),
+    SUBSCRIBE_MESSAGE("/subscribeMessage"),
     SUBSCRIBE("/subscribe"),
+    UNSUBSCRIBE("/unsubscribe"),
+    UNSUBSCRIBE_MESSAGE("/unsubscribeMessage"),
     SUBSCRIPTIONS("/subscriptions"),
     UNKNOWN("");
     private final String command;

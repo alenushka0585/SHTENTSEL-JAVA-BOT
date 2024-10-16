@@ -3,6 +3,7 @@ package de.tel_ran.shtentsel_java_telegrambot.service;
 import de.tel_ran.shtentsel_java_telegrambot.dto.CurrencyDto;
 import de.tel_ran.shtentsel_java_telegrambot.entity.Currency;
 import de.tel_ran.shtentsel_java_telegrambot.repository.CurrencyRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 
 @Service
+@Slf4j
 public class CurrencyService {
     private static final String BASE_URL = "https://www.floatrates.com/daily/";
 
@@ -43,7 +45,7 @@ public class CurrencyService {
                 currencyDto = rates.get(requiredCurrency.toLowerCase());
             }
         } catch (IOException e) {
-
+            log.info("Failed to get CurrencyRate json file", e);
         }
 
         return  currencyDto.getDate() + "\n" +
@@ -64,7 +66,7 @@ public class CurrencyService {
 
             }
         } catch (IOException e) {
-
+            log.info("Failed to get CurrencyRate json file", e);
         }
         return rates;
     }
@@ -73,8 +75,4 @@ public class CurrencyService {
         Currency c = currencyRepository.findByCode(currency);
         return c != null;
     }
-
-
-
-    //TODO добавить обработку ошибок и logger
 }

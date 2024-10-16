@@ -1,17 +1,21 @@
 package de.tel_ran.shtentsel_java_telegrambot.command;
 
-import de.tel_ran.shtentsel_java_telegrambot.entity.Subscription;
 import de.tel_ran.shtentsel_java_telegrambot.entity.User;
 import de.tel_ran.shtentsel_java_telegrambot.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.List;
+
 @Component
+@Slf4j
 public class ExchangeRatesBot extends TelegramLongPollingBot {
 
     private boolean isBaseCurrency;
@@ -29,6 +33,9 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
     @Autowired
     private SubscriptionService subscriptionService;
 
+    @Autowired
+    private AdminService adminService;
+
     @Value("${bot.name}")
     private String botName;
 
@@ -43,62 +50,83 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
         String message = botService.getUpdateMessage(update);
         Long chatId = botService.getUpdateChatId(update);
         String userName = botService.getUpdateUserName(update);
-        Command command = Command.fromString(message);
-        userService.saveUserIfNotExist(botService.getUpdateUserName(update), botService.getUpdateChatId(update));
+        User user = userService.getOrSaveUser(userName, chatId);
+        boolean isAvailableForSubscription = subscriptionService
+                .availableForSubscriptionCurrencies(message.toUpperCase().replaceAll("REMOVE\\(|\\)", ""));
+        Command command = botService.checkConditions(message, isBaseCurrency, baseCurrency, isAvailableForSubscription);
 
 
         switch (command) {
             case START -> sendMessage(
                     botService.setKeyboard(
                             botService.createMessage(chatId, Message.START_MESSAGE.getText()), botService.menuKeyboard()
-                    )
+                    ), chatId
             );
-            case RATE -> sendMessage(
+            case RATE_MESSAGE -> sendMessage(
                     botService.setKeyboard(
                             botService.createMessage(chatId, Message.BASE_CURRENCY.getText()), botService.currencyKeyboard()
-                    )
+                    ), chatId
             );
+            case SET_BASE_CURRENCY -> {
+                baseCurrency = message;
+                isBaseCurrency = true;
+                sendMessage(botService.setKeyboard(
+                                botService.createMessage(
+                                        chatId, Message.REQUIRED_CURRENCY.getText()), botService.currencyKeyboard()
+                        ), chatId
+                );
+            }
+            case SET_REQUIRED_CURRENCY -> {
+                isBaseCurrency = false;
+                sendMessage(
+                        botService.createMessage(
+                                chatId, currencyService.getCurrencyRate(baseCurrency, message)
+                        ), chatId
+                );
+            }
             case STOP -> sendMessage(
                     botService.createMessage(
                             chatId, Message.BYE_MESSAGE.getText()
-                    )
+                    ), chatId
+            );
+            case SUBSCRIBE_MESSAGE -> sendMessage(
+                    botService.createMessage(
+                            chatId, Message.SUBSCRIBE_MESSAGE.getText()
+                    ), chatId
             );
             case SUBSCRIBE -> {
+                userService.addSubscriptionToUser(user, message);
+                sendMessage(botService.createMessage(chatId, Message.SUBSCRIBED.getText() + "\n" + message.toUpperCase()), chatId);
+            }
+
+            case UNSUBSCRIBE_MESSAGE -> sendMessage(
+                    botService.createMessage(
+                            chatId, Message.UNSUBSCRIBE_MESSAGE.getText()
+                    ), chatId
+            );
+            case UNSUBSCRIBE -> {
+                String subscription = message.toUpperCase().replaceAll("REMOVE\\(|\\)", "");
+                userService.deleteSubscriptionFromUser(user, subscription);
+                subscriptionService.setActivity(subscription);
                 sendMessage(
                         botService.createMessage(
-                                chatId, Message.SUBSCRIBE_MESSAGE.getText()
-                        )
-                );
+                                chatId, Message.UNSUBSCRIBED.getText() + "\n" + subscription)
+                        , chatId);
             }
+
             case SUBSCRIPTIONS -> sendMessage(
                     botService.createMessage(
-                            chatId, "Не забудь добавить список подписок!!!"
-                    )
+                            chatId, userService.getMessageWithSubscriptions(
+                                    userService.getSubscriptions(user)
+                            )
+                    ), chatId
             );
             default -> {
-                if (currencyService.isCurrencyExisted(message) && !isBaseCurrency) {
-                    baseCurrency = message;
-                    isBaseCurrency = true;
-                    sendMessage(botService.setKeyboard(
-                                    botService.createMessage(
-                                            chatId, Message.REQUIRED_CURRENCY.getText()), botService.currencyKeyboard()
-                            )
-                    );
-                } else if (currencyService.isCurrencyExisted(message) && isBaseCurrency) {
-                    isBaseCurrency = false;
-                    sendMessage(botService.createMessage(chatId, currencyService.getCurrencyRate(baseCurrency, message)));
-                } else if (subscriptionService.availableForSubscriptionCurrencies(message)) {
-                   User user = userService.saveUserIfNotExist(userName, chatId);
-                   userService.addSubscriptionToUser(user, message);
-                    sendMessage(botService.createMessage(chatId, Message.SUBSCRIBED.getText() + "\n" + message));
-
-                } else {
-                    isBaseCurrency = false;
-                    sendMessage(botService.createMessage(
-                                    chatId, Message.UNKNOWN_COMMAND.getText()
-                            )
-                    );
-                }
+                isBaseCurrency = false;
+                sendMessage(botService.createMessage(
+                                chatId, Message.UNKNOWN_COMMAND.getText()
+                        ), chatId
+                );
             }
         }
     }
@@ -108,22 +136,40 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
         return this.botName;
     }
 
-    public void sendMessage(SendMessage sendMessage) {
+
+    public void sendMessage(SendMessage sendMessage, Long chatId) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
+            log.error("Failed to send message to user with chatId {}: {}", chatId, e.getMessage());
         }
     }
 
-//    public void sendMessage(Long chatId, String text) {
-//        var chatIdStr = String.valueOf(chatId);
-//        var sendMessage = new SendMessage(chatIdStr, text);
-//        try {
-//            execute(sendMessage);
-//        } catch (TelegramApiException e) {
-//        }
-//    }
 
+    // @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(fixedRate = 300000)
+    public void sendCurrencyUpdates() {
+        userService.getAllUsersWithSubscriptions().stream()
+                .parallel()  // Запускаем обработку пользователей в параллельных потоках
+                .forEach(user -> {
+                    user.getSubscriptions().stream()
+                            .forEach(subscription -> {
+                                String message = currencyService.getCurrencyRate(subscription.getBaseCurrency(), subscription.getRequiredCurrency());
+                                sendMessage(botService.createMessage(user.getChatId(), message), user.getChatId());
+                            });
+                });
+    }
+
+    // @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(fixedRate = 300000)
+    public void sendAdminInfo() {
+        List<User> admins = userService.findByRolesRoleName(RoleName.ADMIN.getRole());
+
+        admins.parallelStream()
+                .forEach(admin ->
+                        sendMessage(botService.createMessage(admin.getChatId(), adminService.messageForAdmin()), admin.getChatId()));
+
+    }
 
 //TODO обработать исключение
 }
