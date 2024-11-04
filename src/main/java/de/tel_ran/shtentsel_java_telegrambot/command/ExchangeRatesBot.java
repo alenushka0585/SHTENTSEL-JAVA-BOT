@@ -14,6 +14,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
+/**
+ * The ExchangeRatesBot class represents a Telegram bot for providing currency exchange rates.
+ * It handles incoming updates, manages user interactions, and sends scheduled updates for currency rates.
+ */
 @Component
 @Slf4j
 public class ExchangeRatesBot extends TelegramLongPollingBot {
@@ -39,11 +43,21 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
     @Value("${bot.name}")
     private String botName;
 
+    /**
+     * Constructor for the bot, initializing with the bot token.
+     *
+     * @param botToken The token for the Telegram bot.
+     */
     public ExchangeRatesBot(
             @Value("${bot.token}") String botToken) {
         super(botToken);
     }
 
+    /**
+     * Handles incoming updates from Telegram.
+     *
+     * @param update The update received from Telegram.
+     */
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -131,12 +145,22 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Returns the username of the bot.
+     *
+     * @return The bot's username.
+     */
     @Override
     public String getBotUsername() {
         return this.botName;
     }
 
-
+    /**
+     * Sends a message to the specified chat ID.
+     *
+     * @param sendMessage The message to be sent.
+     * @param chatId      The chat ID of the recipient.
+     */
     public void sendMessage(SendMessage sendMessage, Long chatId) {
         try {
             execute(sendMessage);
@@ -145,7 +169,10 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
         }
     }
 
-
+    /**
+     * Sends scheduled updates for currency rates to users with active subscriptions.
+     * This method runs at fixed intervals.
+     */
     // @Scheduled(cron = "0 0 8 * * ?")
     @Scheduled(fixedRate = 300000)
     public void sendCurrencyUpdates() {
@@ -160,6 +187,9 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
                 });
     }
 
+    /**
+     * Sends administrative information to users with admin roles at fixed intervals.
+     */
     // @Scheduled(cron = "0 0 8 * * ?")
     @Scheduled(fixedRate = 300000)
     public void sendAdminInfo() {
@@ -170,6 +200,4 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
                         sendMessage(botService.createMessage(admin.getChatId(), adminService.messageForAdmin()), admin.getChatId()));
 
     }
-
-//TODO обработать исключение
 }

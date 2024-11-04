@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Service class for handling operations related to subscriptions.
+ * This class provides methods to save, retrieve and update subscriptions.
+ */
 @Service
 @Slf4j
 public class SubscriptionService {
@@ -21,6 +24,12 @@ public class SubscriptionService {
     @Autowired
     CurrencyService currencyService;
 
+    /**
+     * Saves a new subscription if it does not exist or updates an existing one.
+     *
+     * @param subscriptionName The name of the subscription in the format "BASE:REQUIRED".
+     * @return The saved or updated Subscription object.
+     */
     @Transactional
     public Subscription saveSubscriptionIfNotExist(String subscriptionName) {
         subscriptionName = subscriptionName.toUpperCase();
@@ -42,6 +51,12 @@ public class SubscriptionService {
         return subscription;
     }
 
+    /**
+     * Checks if the given subscription name is available for subscription.
+     *
+     * @param subscriptionName The subscription name in the format "BASE:REQUIRED".
+     * @return true if both currencies exist, false otherwise.
+     */
     public boolean availableForSubscriptionCurrencies(String subscriptionName) {
         String[] name = subscriptionName.split(":");
         return name.length == 2 &&
@@ -49,20 +64,31 @@ public class SubscriptionService {
                 currencyService.isCurrencyExisted(name[1]);
     }
 
+    /**
+     * Retrieves a subscription by its name.
+     *
+     * @param subscriptionName The name of the subscription.
+     * @return The Subscription object if found, otherwise null.
+     */
     @Transactional
     public Subscription getSubscription(String subscriptionName) {
         subscriptionName = subscriptionName.toUpperCase();
         Subscription subscription = subscriptionRepository.findBySubscriptionName(subscriptionName);
-        if (subscription == null){
+        if (subscription == null) {
             log.info("There is no Subscription with the name: " + subscriptionName);
         }
         return subscription;
     }
 
+    /**
+     * Deactivates a subscription if it has no associated users.
+     *
+     * @param subscriptionName The name of the subscription to check and deactivate.
+     */
     @Transactional
     public void setActivity(String subscriptionName) {
         Subscription subscription = subscriptionRepository.findBySubscriptionName(subscriptionName);
-        if (subscription == null){
+        if (subscription == null) {
             log.info("There is no Subscription with the name: " + subscriptionName);
             return;
         }
@@ -73,8 +99,12 @@ public class SubscriptionService {
         }
     }
 
+    /**
+     * Retrieves a list of all active subscriptions.
+     *
+     * @return A list of active Subscription objects.
+     */
     public List<Subscription> findByIsActiveTrue() {
         return subscriptionRepository.findByIsActiveTrue();
     }
-
 }

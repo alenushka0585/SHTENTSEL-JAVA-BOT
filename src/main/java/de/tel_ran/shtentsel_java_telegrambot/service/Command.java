@@ -3,6 +3,10 @@ package de.tel_ran.shtentsel_java_telegrambot.service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Enum representing various commands supported by the Telegram bot.
+ * Each command has an associated string value that represents the user input.
+ */
 @Getter
 @AllArgsConstructor
 public enum Command {
@@ -20,6 +24,12 @@ public enum Command {
     UNKNOWN("");
     private final String command;
 
+    /**
+     * Returns the corresponding Command enum for a given string input.
+     *
+     * @param text the command text received as user input.
+     * @return the matching Command enum, or UNKNOWN if no match is found.
+     */
     public static Command fromString(String text) {
         for (Command c : Command.values()) {
             if (c.getCommand().equalsIgnoreCase(text)) {

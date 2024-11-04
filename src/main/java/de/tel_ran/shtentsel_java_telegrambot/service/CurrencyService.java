@@ -15,16 +15,22 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Service class for handling currency rate operations.
+ * Uses Retrofit to fetch data from an external API and interacts with the repository for currency data management.
+ */
 @Service
 @Slf4j
 public class CurrencyService {
     private static final String BASE_URL = "https://www.floatrates.com/daily/";
 
-    private CurrencyApi currencyApi;
+    private final CurrencyApi currencyApi;
     @Autowired
     CurrencyRepository currencyRepository;
 
+    /**
+     * Constructor for initializing Retrofit instance and setting up the currency API interface.
+     */
     public CurrencyService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -33,6 +39,13 @@ public class CurrencyService {
         currencyApi = retrofit.create(CurrencyApi.class);
     }
 
+    /**
+     * Retrieves the exchange rate between the base currency and the required currency.
+     *
+     * @param baseCurrency     the base currency code (e.g., "USD").
+     * @param requiredCurrency the target currency code (e.g., "EUR").
+     * @return a formatted string containing the exchange rate details, or an error message if retrieval fails.
+     */
     public String getCurrencyRate(
             String baseCurrency,
             String requiredCurrency) {
@@ -48,12 +61,18 @@ public class CurrencyService {
             log.info("Failed to get CurrencyRate json file", e);
         }
 
-        return  currencyDto.getDate() + "\n" +
+        return currencyDto.getDate() + "\n" +
                 baseCurrency.toUpperCase() + " : " + requiredCurrency.toUpperCase() + "\n" +
-                "Курс: " +  String.format("%.3f", currencyDto.getRate()) + "\n" +
+                "Курс: " + String.format("%.3f", currencyDto.getRate()) + "\n" +
                 "Обратный курс: " + String.format("%.3f", currencyDto.getInverseRate());
     }
 
+    /**
+     * Retrieves a map of all currency rates based on the provided base currency.
+     *
+     * @param baseCurrency the base currency code.
+     * @return a map containing currency codes as keys and corresponding {@link CurrencyDto} as values.
+     */
     // TODO Метод создавался для заполнения базы данных списком доступных валют, удалить???
     public Map<String, CurrencyDto> getCurrencyRates(
             String baseCurrency) {
@@ -71,7 +90,13 @@ public class CurrencyService {
         return rates;
     }
 
-    public boolean isCurrencyExisted (String currency){
+    /**
+     * Checks if the provided currency code exists in the database.
+     *
+     * @param currency the currency code to check.
+     * @return {@code true} if the currency exists, {@code false} otherwise.
+     */
+    public boolean isCurrencyExisted(String currency) {
         Currency c = currencyRepository.findByCode(currency);
         return c != null;
     }

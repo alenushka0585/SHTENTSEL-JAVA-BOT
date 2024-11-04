@@ -14,6 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Service class for handling operations related to users.
+ * This class includes methods for managing users, their roles, and their subscriptions.
+ */
 @Service
 @Slf4j
 public class UserService {
@@ -26,6 +30,13 @@ public class UserService {
     @Autowired
     RoleRepository repository;
 
+    /**
+     * Retrieves an existing user by chat ID or saves a new user if not found.
+     *
+     * @param userName The name of the user.
+     * @param chatId   The chat ID of the user.
+     * @return The existing or newly saved User object.
+     */
     @Transactional
     public User getOrSaveUser(String userName, Long chatId) {
         User user = userRepository.findByChatId(chatId);
@@ -40,6 +51,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Adds a subscription to the user if not already present.
+     *
+     * @param user             The User object.
+     * @param subscriptionName The name of the subscription in "BASE:REQUIRED" format.
+     */
     @Transactional
     public void addSubscriptionToUser(User user, String subscriptionName) {
         Set<Subscription> subscriptions = getSubscriptions(user);
@@ -52,6 +69,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Retrieves subscriptions of a user.
+     *
+     * @param user The User object.
+     * @return A set of Subscription objects associated with the user.
+     */
     @Transactional
     public Set<Subscription> getSubscriptions(User user) {
         Set<Subscription> subscriptions = user.getSubscriptions();
@@ -62,21 +85,38 @@ public class UserService {
         return subscriptions;
     }
 
-    public List<User> getAllUsersWithSubscriptions (){
+    /**
+     * Retrieves all users who have active subscriptions.
+     *
+     * @return A list of User objects with active subscriptions.
+     */
+    public List<User> getAllUsersWithSubscriptions() {
         return userRepository.findBySubscriptionsIsNotEmpty();
     }
 
-    public List<User> findByRolesRoleName (String roleName){
+    /**
+     * Finds users by role name.
+     *
+     * @param roleName The name of the role.
+     * @return A list of users with the specified role, or null if none found.
+     */
+    public List<User> findByRolesRoleName(String roleName) {
         List<User> users = userRepository.findByRolesRoleName(roleName);
-        if (users == null || users.isEmpty()){
+        if (users == null || users.isEmpty()) {
             log.info("There are no users with role: " + roleName);
             return null;
         }
         return users;
     }
 
+    /**
+     * Deletes a subscription from a user.
+     *
+     * @param user             The User object.
+     * @param subscriptionName The name of the subscription to be removed.
+     */
     @Transactional
-    public void deleteSubscriptionFromUser(User user, String subscriptionName){
+    public void deleteSubscriptionFromUser(User user, String subscriptionName) {
         Set<Subscription> subscriptions = getSubscriptions(user);
         Subscription subscription = subscriptionService.getSubscription(subscriptionName);
         subscriptions.remove(subscription);
@@ -84,6 +124,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Constructs a message containing the user's active subscriptions.
+     *
+     * @param subscriptions The set of subscriptions.
+     * @return A formatted string message with subscription details.
+     */
     public String getMessageWithSubscriptions(Set<Subscription> subscriptions) {
         String message = "У Вас нет активных подписок";
         String activeSubscriptions = "";
@@ -105,6 +151,12 @@ public class UserService {
         return message;
     }
 
+    /**
+     * Retrieves roles assigned to a user.
+     *
+     * @param user The User object.
+     * @return A set of Role objects associated with the user.
+     */
     public Set<Role> getRoles(User user) {
         Set<Role> roles = user.getRoles();
         if (roles == null) {
