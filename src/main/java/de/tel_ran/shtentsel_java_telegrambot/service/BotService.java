@@ -191,7 +191,7 @@ public class BotService {
      * @return a list of InlineKeyboardButton objects.
      */
     @NotNull
-    private List<InlineKeyboardButton> createCurrencyButtonRow(
+    public List<InlineKeyboardButton> createCurrencyButtonRow(
             String currencyCode1,
             String currencyCode2,
             String currencyCode3,
@@ -214,7 +214,7 @@ public class BotService {
      * @return a list of InlineKeyboardButton objects.
      */
     @NotNull
-    private List<InlineKeyboardButton> createButtonsRow(
+    public List<InlineKeyboardButton> createButtonsRow(
             String button, String callbackData) {
         List<InlineKeyboardButton> buttonRow = new ArrayList<>();
 

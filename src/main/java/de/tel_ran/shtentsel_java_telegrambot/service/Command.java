@@ -10,7 +10,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Command {
-    HELP("/help"),
     START("/start"),
     STOP("/stop"),
     RATE_MESSAGE("/rateMessage"),

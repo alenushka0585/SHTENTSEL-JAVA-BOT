@@ -40,6 +40,14 @@ public class CurrencyService {
     }
 
     /**
+     * Constructor for JUnit tests.
+     */
+    public CurrencyService(CurrencyApi currencyApi, CurrencyRepository currencyRepository) {
+        this.currencyApi = currencyApi;
+        this.currencyRepository = currencyRepository;
+    }
+
+    /**
      * Retrieves the exchange rate between the base currency and the required currency.
      *
      * @param baseCurrency     the base currency code (e.g., "USD").
