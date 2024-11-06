@@ -1,11 +1,13 @@
-package de.tel_ran.shtentsel_java_telegrambot.command;
+package de.tel_ran.shtentsel_java_telegrambot.controller;
 
+import de.tel_ran.shtentsel_java_telegrambot.dto.Command;
+import de.tel_ran.shtentsel_java_telegrambot.dto.Message;
 import de.tel_ran.shtentsel_java_telegrambot.entity.User;
+import de.tel_ran.shtentsel_java_telegrambot.network.CurrencyService;
 import de.tel_ran.shtentsel_java_telegrambot.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,7 +18,7 @@ import java.util.List;
 
 /**
  * The ExchangeRatesBot class represents a Telegram bot for providing currency exchange rates.
- * It handles incoming updates, manages user interactions, and sends scheduled updates for currency rates.
+ * It handles incoming updates and manages user interactions.
  */
 @Component
 @Slf4j
@@ -167,37 +169,5 @@ public class ExchangeRatesBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             log.error("Failed to send message to user with chatId {}: {}", chatId, e.getMessage());
         }
-    }
-
-    /**
-     * Sends scheduled updates for currency rates to users with active subscriptions.
-     * This method runs at fixed intervals.
-     */
-    // @Scheduled(cron = "0 0 8 * * ?")
-    @Scheduled(fixedRate = 300000)
-    public void sendCurrencyUpdates() {
-        userService.getAllUsersWithSubscriptions().stream()
-                .parallel()  // Запускаем обработку пользователей в параллельных потоках
-                .forEach(user -> {
-                    user.getSubscriptions().stream()
-                            .forEach(subscription -> {
-                                String message = currencyService.getCurrencyRate(subscription.getBaseCurrency(), subscription.getRequiredCurrency());
-                                sendMessage(botService.createMessage(user.getChatId(), message), user.getChatId());
-                            });
-                });
-    }
-
-    /**
-     * Sends administrative information to users with admin roles at fixed intervals.
-     */
-    // @Scheduled(cron = "0 0 8 * * ?")
-    @Scheduled(fixedRate = 300000)
-    public void sendAdminInfo() {
-        List<User> admins = userService.findByRolesRoleName(RoleName.ADMIN.getRole());
-
-        admins.parallelStream()
-                .forEach(admin ->
-                        sendMessage(botService.createMessage(admin.getChatId(), adminService.messageForAdmin()), admin.getChatId()));
-
     }
 }

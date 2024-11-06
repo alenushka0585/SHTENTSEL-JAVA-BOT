@@ -2,6 +2,7 @@ package de.tel_ran.shtentsel_java_telegrambot.service;
 
 import de.tel_ran.shtentsel_java_telegrambot.entity.Subscription;
 import de.tel_ran.shtentsel_java_telegrambot.entity.User;
+import de.tel_ran.shtentsel_java_telegrambot.network.CurrencyService;
 import de.tel_ran.shtentsel_java_telegrambot.repository.SubscriptionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

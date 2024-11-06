@@ -1,5 +1,7 @@
 package de.tel_ran.shtentsel_java_telegrambot.service;
 
+import de.tel_ran.shtentsel_java_telegrambot.dto.Command;
+import de.tel_ran.shtentsel_java_telegrambot.network.CurrencyService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -99,7 +101,7 @@ public class BotService {
     }
 
     /**
-     * Checks the conditions of a received message and determines the appropriate command.
+     * Checks the conditions of a received message and determines the appropriate controller.
      *
      * @param message                    the text message from the user.
      * @param isBaseCurrency             a flag indicating if a base currency has been set.

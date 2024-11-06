@@ -1,5 +1,7 @@
 package de.tel_ran.shtentsel_java_telegrambot.service;
 
+import de.tel_ran.shtentsel_java_telegrambot.dto.Message;
+import de.tel_ran.shtentsel_java_telegrambot.entity.RoleName;
 import de.tel_ran.shtentsel_java_telegrambot.entity.Subscription;
 import de.tel_ran.shtentsel_java_telegrambot.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

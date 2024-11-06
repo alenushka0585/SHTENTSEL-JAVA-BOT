@@ -27,7 +27,7 @@ public class LoggingAspect {
      * @param returnValue The return value of the method.
      */
     @AfterReturning(
-            value = "execution(* de.tel_ran.shtentsel_java_telegrambot.command.ExchangeRatesBot..*(..))",
+            value = "execution(* de.tel_ran.shtentsel_java_telegrambot.controller.ExchangeRatesBot..*(..))",
             returning = "returnValue"
     )
     public void afterExchangeRatesBot(

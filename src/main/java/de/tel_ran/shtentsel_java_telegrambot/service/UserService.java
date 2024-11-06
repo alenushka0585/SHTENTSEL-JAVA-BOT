@@ -1,6 +1,7 @@
 package de.tel_ran.shtentsel_java_telegrambot.service;
 
 import de.tel_ran.shtentsel_java_telegrambot.entity.Role;
+import de.tel_ran.shtentsel_java_telegrambot.entity.RoleName;
 import de.tel_ran.shtentsel_java_telegrambot.entity.Subscription;
 import de.tel_ran.shtentsel_java_telegrambot.entity.User;
 import de.tel_ran.shtentsel_java_telegrambot.repository.RoleRepository;

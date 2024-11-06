@@ -1,5 +1,7 @@
 package de.tel_ran.shtentsel_java_telegrambot.service;
 
+import de.tel_ran.shtentsel_java_telegrambot.dto.Command;
+import de.tel_ran.shtentsel_java_telegrambot.network.CurrencyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,8 +1,10 @@
 de.tel_ran.shtentsel_java_telegrambot
 de.tel_ran.shtentsel_java_telegrambot.aspect
-de.tel_ran.shtentsel_java_telegrambot.command
 de.tel_ran.shtentsel_java_telegrambot.config
+de.tel_ran.shtentsel_java_telegrambot.controller
 de.tel_ran.shtentsel_java_telegrambot.dto
 de.tel_ran.shtentsel_java_telegrambot.entity
+de.tel_ran.shtentsel_java_telegrambot.network
 de.tel_ran.shtentsel_java_telegrambot.repository
+de.tel_ran.shtentsel_java_telegrambot.scheduler
 de.tel_ran.shtentsel_java_telegrambot.service

@@ -2,6 +2,8 @@ package de.tel_ran.shtentsel_java_telegrambot.service;
 
 import de.tel_ran.shtentsel_java_telegrambot.dto.CurrencyDto;
 import de.tel_ran.shtentsel_java_telegrambot.entity.Currency;
+import de.tel_ran.shtentsel_java_telegrambot.network.CurrencyApi;
+import de.tel_ran.shtentsel_java_telegrambot.network.CurrencyService;
 import de.tel_ran.shtentsel_java_telegrambot.repository.CurrencyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

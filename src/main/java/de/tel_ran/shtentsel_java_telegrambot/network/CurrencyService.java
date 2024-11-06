@@ -1,4 +1,4 @@
-package de.tel_ran.shtentsel_java_telegrambot.service;
+package de.tel_ran.shtentsel_java_telegrambot.network;
 
 import de.tel_ran.shtentsel_java_telegrambot.dto.CurrencyDto;
 import de.tel_ran.shtentsel_java_telegrambot.entity.Currency;

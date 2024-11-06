@@ -1,5 +1,7 @@
 package de.tel_ran.shtentsel_java_telegrambot.service;
 
+import de.tel_ran.shtentsel_java_telegrambot.dto.Message;
+import de.tel_ran.shtentsel_java_telegrambot.entity.RoleName;
 import de.tel_ran.shtentsel_java_telegrambot.entity.Subscription;
 import de.tel_ran.shtentsel_java_telegrambot.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
